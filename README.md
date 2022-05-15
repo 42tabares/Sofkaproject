@@ -3,6 +3,13 @@ ALBATROSS HOTELS
 
 Basic webpage in HTML to create and manage hotel reservation and rooms
 
+Run this webpage with the following commands:
+
+.\env\Scripts\activate
+py manage.py runserver
+
+Server will run on http://127.0.0.1:8000/
+
 You can create two types of users: Companies and Customers
 
 Companies can:
