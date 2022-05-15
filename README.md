@@ -5,21 +5,21 @@ Basic webpage in HTML to create and manage hotel reservation and rooms
 
 Run this webpage with the following commands:
 
-.\env\Scripts\activate
-py manage.py runserver
+>.\env\Scripts\activate
+>py manage.py runserver
 
 Server will run on http://127.0.0.1:8000/
 
 You can create two types of users: Companies and Customers
 
 Companies can:
->Create/delete Hotels
->Create/delete Room Types within those Hotels
->Accept/Deny reservations done to their Hotels
+*Create/delete Hotels
+*Create/delete Room Types within those Hotels
+*Accept/Deny reservations done to their Hotels
 
 Users can:
->Submit Reservations to the hotel for confirmation
->Read their Reservations info and current status
+*Submit Reservations to the hotel for confirmation
+*Read their Reservations info and current status
 
 HOW TO USE:
 
