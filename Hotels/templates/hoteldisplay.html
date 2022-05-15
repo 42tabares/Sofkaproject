@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="scripts.js"></script>
+    <title>{{Hotel.name}}</title>
+</head>
+
+<body>
+
+    <!-- HEAD AND  NAVBAR-->  
+    <div>
+        <h1 class="MainTitle">
+            Albatross Hotels
+        </h1>
+        <div>
+            <span><a href="/">Home</a></span>
+            <span><a href="/about">Albatross IT</a></span>
+            <span><a href="/hotels">Hotels</a></span>
+            {%if not user.is_authenticated%}
+            <span><a href="/companysignup">Companies</a></span>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <span><a href="/profile/{{user.username}}">{{user.username}}</a></span>
+                <span><a href="/login/signout">Log out</a></span>
+            {% else %}
+                <span><a href="/login">Log in</a></span>
+            {% endif %}
+        </div>
+    </div>
+    
+
+    <h1>{{Hotel.name}}<h1>
+    <h2> Located in {{Hotel.location}}</h2>
+
+    {% if Hotel.image %}
+        <img src="{{Hotel.image}}" width="500" height="600">
+    {% endif%}
+
+    {% if Hotel.description %}
+        <p>{{Hotel.description}}</p>
+    {% endif %}
+    
+
+    <div>
+        {% if RoomTypes %}
+            <h3>Rooms</h3>
+
+            <dl>
+            {% for rt in RoomTypes %}
+            <div>
+                <dt><h4> {{ rt.category }} </h4></dt>
+                <dd>
+
+                    <img src="{{rt.image}}" alt="No Image Available" width="350" height="300">
+                    <p>{{ rt.description }}</p>
+                    <h5> Cost per night: {{ rt.cost }}</h5>
+                    {% if not Admin %}
+                        <a href="/reservationpage/{{Hotel.name}}/{{rt.id}}/{{user.get_username}}"><button>Reservate this room</button></a>
+                    {% else %}
+                        <form action="/delete/<RoomType>" method="POST"> {% csrf_token %}
+
+                            <input type="hidden" id="company_name" name="company_name" value="{{User.username}}">
+
+                            <input type="hidden" id="hotel_name" name="hotel_name" value="{{Hotel.name}}">
+
+                            <input type="hidden" id="category"   name="category" value="{{rt.category}}">
+
+                            <button type="submit">Delete room type</button>
+
+                        </form>
+                    {% endif %}
+                    
+                </dd>
+            </div>
+            {% endfor %}
+            </dl>
+        {% else %}
+            <p>No rooms have been registered yet</p>
+        {% endif %}
+        
+        {% if Admin %}
+        <div>
+
+            <h3>Create Roomtype</h3>
+    
+                <form action="/create/<RoomType>" method="POST"> {% csrf_token %}
+    
+                    <input type="hidden" id="company_name" name="company_name" value="{{User.username}}">
+
+                    <input type="hidden" id="hotel_name" name="hotel_name" value="{{Hotel.name}}">
+    
+                    <input type="hidden" id="hotel_id" name="hotel_id" value="{{Hotel.id}}">
+                
+                    <input type="text" id="category" name="category" Placeholder="Category of room type" required>
+        
+                    <input type="text" id="cost" name="cost" Placeholder="cost" required>
+    
+                    <input type="text" id="hotel_description" name="description" Placeholder="Description (optional)">
+    
+                    <input type="text" id="hotel_image" name="image" Placeholder="Image (optional)">
+        
+                    <br>
+        
+                    <button type="submit">Create Room Type</button>
+                </form>
+    
+        {% endif%}
+    </div>
+
+
+</body>
+</html>

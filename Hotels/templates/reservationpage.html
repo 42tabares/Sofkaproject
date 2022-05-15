@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{Hotel.name}} Reservation</title>
+</head>
+<body>
+
+    <!-- HEAD AND  NAVBAR-->  
+    <div>
+        <h1 class="MainTitle">
+            Albatross Hotels
+        </h1>
+        <div>
+            <span><a href="/">Home</a></span>
+            <span><a href="/about">Albatross IT</a></span>
+            <span><a href="/hotels">Hotels</a></span>
+            {%if not user.is_authenticated%}
+            <span><a href="/companysignup">Companies</a></span>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <span><a href="/profile/{{user.username}}">{{user.username}}</a></span>
+                <span><a href="/login/signout">Log out</a></span>
+            {% else %}
+                <span><a href="/login">Log in</a></span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!--Reservation zone-->
+
+    <h1>Make reservation at {{Hotel.name}}</h1>
+    <h2>Reservation info</h2>
+    <h3>Room: {{RoomType.category}}</h3>
+    <h3>Cost: {{RoomType.cost}} per each night of stay</h3>
+
+    <form action="/makereservation/{{Hotel.name}}/{{RoomType.id}}/{{user.get_username}}" method="POST"> {% csrf_token %}
+        
+        <h3>Start of Reservation</h3>
+        <input type="date" id="date_start" name="date_start" required>
+
+        <h3>End of Reservation</h3>
+        <input type="date" id="date_end" name="date_end"  required>
+    
+        <br>
+        <br>
+    
+        <button type="submit">Submit Reservation for Approval</button>
+    </form>
+
+    </div>
+
+</body>
+</html>

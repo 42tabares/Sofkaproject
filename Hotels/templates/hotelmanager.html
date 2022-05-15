@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="scripts.js"></script>
+    <title>{{Company.name}} | Management</title>
+</head>
+
+<!-- We ensure the authenticated user is the one accesing the profile-->
+
+<body>
+
+    <!-- HEAD AND  NAVBAR-->  
+    <div>
+        <h1 class="MainTitle">
+            Albatross Hotels
+        </h1>
+        <div>
+            <span><a href="/">Home</a></span>
+            <span><a href="/about">Albatross IT</a></span>
+            <span><a href="/hotels">Hotels</a></span>
+            {%if not user.is_authenticated%}
+            <span><a href="/companysignup">Companies</a></span>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <span><a href="/profile/{{user.username}}">{{user.username}}</a></span>
+                <span><a href="/login/signout">Log out</a></span>
+            {% else %}
+                <span><a href="/login">Log in</a></span>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <h3>{{ message }}</h3>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div>
+        {% if Hotels %}
+
+            <dl>
+            {% for h in Hotels %}
+
+                <div>
+
+                    <dt><h2><a href="/view/{{user.get_username}}/hotels/{{h.name}}">{{ h.name }}</a></h2></dt>
+
+                    <p>{{h.description}}</p>
+                    <form action="/delete/<Hotel>" method="POST"> {% csrf_token %}
+
+                        <input type="hidden" id="company_name" name="company_name" value="{{Company.name}}">
+
+                        <input type="hidden" id="hotel_name" name="hotel_name" value="{{Hotel.name}}">
+
+                        <button type="submit">Delete Hotel</button>
+                    </form>
+
+                </div>
+
+            {% endfor %}
+            </dl>
+        {% else %}
+            <p>No hotels have been registered yet</p>
+        {% endif %}
+
+
+    <div>
+
+
+    <div>
+
+        <h3>Create Hotel</h2>
+
+            <form action="/create/<Hotel>" method="POST"> {% csrf_token %}
+
+                <input type="hidden" id="company_name" name="company_name" value="{{Company.name}}">
+
+                <input type="hidden" id="company_id" name="company_id" value="{{Company.id}}">
+            
+                <input type="text" id="hotel_name" name="name" Placeholder="Name of the Hotel" required>
+    
+                <input type="text" id="hotel_location" name="location" Placeholder="Location" required>
+
+                <input type="text" id="hotel_description" name="description" Placeholder="Description (optional)">
+
+                <input type="text" id="hotel_image" name="image" Placeholder="Image (optional)">
+    
+                <br>
+    
+                <button type="submit">Create Hotel</button>
+            </form>
+
+    </div>
+
+    <div>
+        <h2> Reservations </h2>
+        {% if Reservations %}
+            {% for r in Reservations%}
+            <dt>User {{r.customer}} has requested a {{r.roomtype}} room in the {{r.hotel_name}} hotel</dt>
+            </dl>    
+                <h3>Customer information:</h3>
+                <span>First Name: {{r.customer_fn}}</p>
+                <span>Last  Name: {{r.customer_ln}}</p>
+                <span>Email: {{r.customer_fn}}</p>
+                
+                <h3>Reservation Period:</h3>
+                <p>from {{r.date_start}} to {{r.date_end}}</p>
+                <h3>Reservation created on {{r.date_created}}</h3>
+                {% if r.status is None %}
+                <form action="/reservationupdate/{{r.id}}" type="POST"> {% csrf_token %}
+                    <input type="hidden" name="statusupdate" value="True">
+                    <button type="submit">Accept</button>
+                </form>
+                <br>
+                <form action="/reservationupdate/{{r.id}}" type="POST"> {% csrf_token %}
+                    <input type="hidden" name="statusupdate" value="False">"
+                    <button type="submit">Denegate</button>
+                </form>
+                {%elif r.status is False %}
+                <h3>Reservation Denegated</h3>
+                {%else%}
+                <h3>Reservation Accepted</h3>
+                {%endif%}
+
+            </dl>
+            {%endfor%}
+        {% else %}
+            <h4> No reservations yet </h4>
+        {% endif %}
+    </div>
+
+
+</body>
+</html>

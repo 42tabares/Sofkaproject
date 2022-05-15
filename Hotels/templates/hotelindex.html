@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albatross Hotels </title>
+</head>
+
+<body>
+
+    <!-- HEAD AND  NAVBAR-->  
+    <div>
+        <h1 class="MainTitle">
+            Albatross Hotels
+        </h1>
+        <div>
+            <span><a href="/">Home</a></span>
+            <span><a href="/about">Albatross IT</a></span>
+            <span><a href="/hotels">Hotels</a></span>
+            {%if not user.is_authenticated%}
+            <span><a href="/companysignup">Companies</a></span>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <span><a href="/profile/{{user.username}}">{{user.username}}</a></span>
+                <span><a href="/login/signout">Log out</a></span>
+            {% else %}
+                <span><a href="/login">Log in</a></span>
+            {% endif %}
+        </div>
+    </div>   
+
+    <!--Hotel display-->
+    <div>
+        {% if Hotels %}
+
+            <dl>
+            {% for h in Hotels %}
+
+                <div>
+                    <a href="/view/{{user.get_username}}/hotels/{{h.name}}">
+                        <dt><h2>{{ h.name }}</a></h2></dt>
+                        <img src="{{h.image}}">
+                        <h3>{{h.description}}</h3>
+                    </a>
+                </div>
+
+            {% endfor %}
+            </dl>
+        {% else %}
+            <p>No hotels have been registered yet</p>
+        {% endif %}
+</body>
+</html>

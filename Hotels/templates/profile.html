@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albatross Hotels</title>
+</head>
+
+<!-- We ensure the authenticated user is the one accesing the profile-->
+{% if User.username != user.get_username %}
+    <meta http-equiv="refresh" content="0; url=/" />
+{% endif %}
+
+<body>
+    <!-- HEAD AND  NAVBAR-->  
+    <div>
+        <h1 class="MainTitle">
+            Albatross Hotels
+        </h1>
+        <div>
+            <span><a href="/">Home</a></span>
+            <span><a href="/about">Albatross IT</a></span>
+            <span><a href="/hotels">Hotels</a></span>
+            {%if not user.is_authenticated%}
+            <span><a href="/companysignup">Companies</a></span>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <span><a href="/profile/{{user.username}}">{{user.username}}</a></span>
+                <span><a href="/login/signout">Log out</a></span>
+            {% else %}
+                <span><a href="/login">Log in</a></span>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <h2> Your Reservations </h2>
+        {% if Reservations %}
+            {% for r in Reservations%}
+            <dt>You've requested a reservation in {{r.hotel_name}} for a {{r.roomtype}} room</dt>
+            </dl>
+
+                <h3>Reservation Period:</h3>
+                <p>from {{r.date_start}} to {{r.date_end}}</p>
+                
+                <h3>Reservation created on {{r.date_created}}</h3>
+
+                <h2>Reservation Status:</h2>
+                {%if r.status is None%}
+                <h3>Reservation is awaiting confirmation from the {{r.hotel_name}} staff</h3>
+                {%elif r.status is False%}
+                <h3>Reservation Denegated, Please get in contact with the {{r.hotel_name}} administration</h3>
+                {% else %}
+                <h3>Reservation Accepted, enjoy your trip!</h3>
+                {%endif%}
+
+            </dl>
+            {%endfor%}
+        {% else %}
+            <h4> You have made no reservations yet </h4>
+        {% endif %}
+    </div>
+    <!--Add more things!-->
+</body>
+</html>
